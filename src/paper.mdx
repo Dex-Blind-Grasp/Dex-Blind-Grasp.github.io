@@ -1,0 +1,237 @@
+---
+title: Blind Dexterous Grasping via Real2Sim2Real Tactile Policy Learning
+authors: []
+links:
+  - name: Paper
+    url: "#"
+    icon: ri:file-pdf-2-line
+  - name: Supplementary Video
+    url: "#"
+    icon: ri:video-line
+  - name: Code
+    url: "#"
+    icon: ri:github-line
+  - name: Hardware
+    url: "#"
+    icon: ri:cpu-line
+theme: device
+favicon: favicon.svg
+description: Blind Dexterous Grasping via Real2Sim2Real Tactile Policy Learning
+thumbnail: screenshot-light.png
+---
+
+import { Icon } from "astro-icon/components";
+import Figure from "./components/Figure.astro";
+import Picture from "./components/Picture.astro";
+import Video from "./components/Video.astro";
+import TwoColumns from "./components/TwoColumns.astro";
+import HighlightedSection from "./components/HighlightedSection.astro";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/starwind/tabs";
+import allVideo from "./assets/AllVideo.mp4";
+import crossFail from "./assets/ExpVideo/Seen/Cross_fai.mp4";
+import crossSucc from "./assets/ExpVideo/Seen/Cross_sec.mp4";
+import cubeballFail from "./assets/ExpVideo/Seen/Cubeball_fai.mp4";
+import cubeballSucc from "./assets/ExpVideo/Seen/Cubeball_sec.mp4";
+import hFail from "./assets/ExpVideo/Seen/H_fai.mp4";
+import hSucc from "./assets/ExpVideo/Seen/H_sec.mp4";
+import forkFail from "./assets/ExpVideo/Unseen/fork_fail.mp4";
+import forkSucc from "./assets/ExpVideo/Unseen/fork_sec.mp4";
+import hourFail from "./assets/ExpVideo/Unseen/Hour_fai.mp4";
+import hourSucc from "./assets/ExpVideo/Unseen/Hour_sec.mp4";
+import snowFail from "./assets/ExpVideo/Unseen/Snow_fail.mp4";
+import snowSucc from "./assets/ExpVideo/Unseen/Snow_sec.mp4";
+import hardwareSet from "./assets/HardwareSet.png";
+import expTab from "./assets/ExpTab.png";
+
+<Figure>
+  <Picture slot="figure" src="../assets/teaser.pdf" alt="Zero-shot sim-to-real transfer of a tactile-conditioned control policy for reactive blind grasping" />
+  <Fragment slot="caption">
+    **Zero-shot sim-to-real transfer of a tactile-conditioned control policy for reactive blind grasping.** The deployed policy performs blind object interaction—searching, adjusting contacts, and lifting—without any visual input, using only robot state and sparse tactile feedback.
+  </Fragment>
+</Figure>
+
+<HighlightedSection>
+
+## Abstract
+
+Blind grasping with a dexterous hand is a crucial manipulation capability. Nevertheless, learning such tactile-only policies for real robots remains challenging due to the tactile sim-to-real gap and the limited expressiveness of sparse tactile signals.
+
+To bridge this gap, we propose a framework for tactile-only blind grasping that is deployable on a physical multi-fingered robotic hand. Our approach combines three key components. First, we introduce a **Real2Sim tactile calibration pipeline** that constructs a contact-calibrated digital-twin simulator capable of reproducing real tactile signals. Second, we improve the expressiveness of sparse tactile observations using a **layout-aware tactile encoder**, which incorporates sensor-geometry priors through self-supervised pretraining. Third, to improve generalization to unseen objects, we train object-specific reinforcement-learning experts in the calibrated simulator and aggregate their successful grasp trajectories into a **tactile-conditioned Diffusion Policy**.
+
+We evaluate our method on a physical LEAP Hand equipped with distributed tactile sensing across 10 seen and 10 unseen objects. The deployed policy achieves a 27% real-world grasp success rate across all 20 objects, without real-world grasping demonstrations or visual input.
+
+</HighlightedSection>
+
+## Key Ideas
+
+<div class="space-y-4 my-6">
+
+<div class="flex items-start gap-3">
+  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:equalizer-line" size={22} /></span>
+  <div><strong>Real2Sim tactile calibration</strong> aligns binary contact-event timing between simulation and hardware using lightweight task-agnostic controlled-contact motions, without requiring complex soft-body modeling or real-world grasping demonstrations.</div>
+</div>
+
+<div class="flex items-start gap-3">
+  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:compasses-2-line" size={22} /></span>
+  <div><strong>Layout-aware tactile encoder</strong> grounds each sensor in 3D via hand kinematics and is pretrained with privileged geometric supervision (object pose, contact labels), injecting spatial priors into sparse binary tactile observations.</div>
+</div>
+
+<div class="flex items-start gap-3">
+  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:git-branch-line" size={22} /></span>
+  <div><strong>Expert-to-diffusion policy distillation</strong> decouples exploration from deployment: object-specific RL experts generate diverse contact-rich trajectories in simulation, which are aggregated to train a single tactile-conditioned Diffusion Policy capable of multimodal grasp generation under partial observability.</div>
+</div>
+
+</div>
+
+<Video src={allVideo} />
+
+## Policy Architecture
+
+Our Real2Sim2Real framework consists of three stages:
+
+- **Stage 1 — Calibrated simulation.** We construct a paired simulator matching the robot's kinematics and tactile sensor layout, then calibrate binary tactile events via task-agnostic controlled-contact motions to align contact onset and activation patterns with the physical hand.
+- **Stage 2 — Privileged tactile pretraining.** A layout-aware tactile encoder is pretrained in simulation using privileged geometric and contact labels (object pose, geometry, contact masks) that are unavailable during deployment, distilling 3D structural priors into the representation.
+- **Stage 3 — Diffusion policy learning.** Object-specific RL experts are trained purely as data generators. Their successful contact-rich trajectories are aggregated, and a tactile-conditioned Diffusion Policy is trained from this offline dataset—the only policy deployed on the real hand.
+
+<Figure>
+  <Picture slot="figure" src="../assets/pipeline.pdf" alt="Overview of the proposed Real2Sim2Real framework for blind dexterous grasping" />
+  <Fragment slot="caption">
+    **Real2Sim2Real framework overview.** Calibrated tactile simulation provides contact-rich training data; a layout-aware tactile encoder distills geometric priors; a Diffusion Policy enables multimodal grasp generation for real-world deployment.
+  </Fragment>
+</Figure>
+
+## Hardware
+
+Our physical platform consists of a 6-DoF xArm6 manipulator equipped with a 16-DoF LEAP Hand. The hand is instrumented with distributed tactile sensing: four custom-built TwinTac sensors on the fingertips (providing $4 \times 8 = 32$ binary channels) and 12 FSR channels on the palm and finger surfaces, yielding 44 tactile channels in total.
+
+<Figure>
+  <Picture slot="figure" src={hardwareSet} alt="Hardware platform and tactile sensing layout" />
+  <Fragment slot="caption">
+    **Hardware platform and tactile sensing.** The LEAP Hand is instrumented with heterogeneous tactile sensors—four TwinTac fingertip sensors and distributed FSRs across palm and phalanges.
+  </Fragment>
+</Figure>
+
+**Open-source hardware.** To facilitate reproducibility, we release the full hardware design of our tactile sensing suite:
+
+- **TwinTac fingertip sensors** — PCB design files, elastomer shell 3D models, and assembly instructions
+- **FSR palm & phalange sensors** — 3D-printable mounting brackets and wiring diagrams
+- **Communication firmware** — ROS2-based driver code for synchronized tactile-proprioceptive data streaming
+
+<a href="#" class="inline-flex items-center gap-1.5 text-blue-500 dark:text-blue-300 hover:underline"><Icon name="ri:folder-open-line" size={18} /> Open-source hardware repository (coming soon)</a>
+
+## Experiment Setup
+
+We evaluate on 20 diverse objects (10 seen, 10 unseen) with the policy deployed zero-shot on the physical LEAP Hand—no real-world grasping demonstrations, no visual input, only proprioception and sparse tactile feedback.
+
+<Figure>
+  <Picture slot="figure" src="../assets/platform.pdf" alt="Experiment setup with object sets and evaluation protocol" />
+  <Fragment slot="caption">
+    **Experiment overview.** (A) Tactile sensor layout. (B) Physical xArm6–LEAP Hand platform. (C) 20-object benchmark with 10 seen and 10 unseen instances.
+  </Fragment>
+</Figure>
+
+<Figure>
+  <Picture slot="figure" src={expTab} alt="Grasp success rates across 20 seen and unseen objects" />
+  <Fragment slot="caption">
+    **Per-object grasp success rates.** Success rates for all 20 objects across 5 trials each, comparing seen (left) and unseen (right) object sets.
+  </Fragment>
+</Figure>
+
+### Qualitative Results
+
+<Tabs defaultValue="cross">
+  <TabsList>
+    <TabsTrigger value="cross">Cross</TabsTrigger>
+    <TabsTrigger value="cubeball">CubeBall</TabsTrigger>
+    <TabsTrigger value="h">H-Shape</TabsTrigger>
+    <TabsTrigger value="fork">Fork</TabsTrigger>
+    <TabsTrigger value="hour">Hourglass</TabsTrigger>
+    <TabsTrigger value="snow">Snowman</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="cross">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={crossSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={crossFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+
+  <TabsContent value="cubeball">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={cubeballSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={cubeballFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+
+  <TabsContent value="h">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={hSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={hFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+
+  <TabsContent value="fork">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={forkSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={forkFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+
+  <TabsContent value="hour">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={hourSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={hourFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+
+  <TabsContent value="snow">
+    <TwoColumns>
+      <Figure slot="left">
+        <Video slot="figure" src={snowSucc} />
+        <Fragment slot="caption">w/ Pretrain</Fragment>
+      </Figure>
+      <Figure slot="right">
+        <Video slot="figure" src={snowFail} />
+        <Fragment slot="caption">w/o Pretrain</Fragment>
+      </Figure>
+    </TwoColumns>
+  </TabsContent>
+</Tabs>
+
+## Limitations
+
+Several limitations remain in the current system. First, the overall success rate is 27%—encouraging for a challenging tactile-only setting, but modest in absolute terms. Second, the hardware provides incomplete tactile coverage: contacts in unsensed regions of the hand produce ambiguous observations that can confuse the policy. Third, the fixed execution horizon does not always suffice for the policy to establish stable grasp configurations, sometimes leading to empty grasps or object drops during lifting.
+
+## Conclusion
+
+This paper presents a complete pipeline for learning and deploying a blind grasping policy on a robotic dexterous hand. Our pipeline combines a tactile-enabled dexterous hand platform, a high-fidelity tactile simulation environment calibrated via Real2Sim, and an RL expert policy with a distillation framework for Sim2Real deployment. By jointly leveraging contact-event calibration, geometry-aware tactile representation learning, and diffusion-based policy aggregation, our system achieves promising results on a large and diverse real-world object set. Future work will focus on improving grasp robustness through denser tactile skins, explicit slip detection, and two-timescale reactive control architectures.
