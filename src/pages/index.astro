@@ -1,6 +1,4 @@
 ---
-import { Font } from "astro:assets";
-
 import Links from "../components/Links.astro";
 import Authors from "../components/Authors.astro";
 import Notes from "../components/Notes.astro";
@@ -39,10 +37,12 @@ const {
 
 const baseUrl = import.meta.env.BASE_URL;
 const prefix = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
+const [titleLead, ...titleTailParts] = title.split(" via ");
+const titleTail = titleTailParts.join(" via ");
 ---
 
 <!doctype html>
-<html class="bg-white dark:bg-zinc-900" lang="en" data-theme={theme}>
+<html lang="en" data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     {description && <meta name="description" content={description} />}
@@ -56,21 +56,30 @@ const prefix = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
     <meta property="og:type" content="website" />
     {thumbnail && <meta property="og:image" content={prefix + thumbnail} />}
 
-    <Font
-      cssVariable="--font-noto-sans"
-      preload={[{ subset: "latin", style: "normal" }]}
-    />
-
     <title>{title}</title>
   </head>
   <body
-    class="prose prose-lg prose-zinc dark:prose-invert prose-a:text-blue-500 prose-a:dark:text-blue-300 prose-a:no-underline prose-a:hover:underline prose-a:font-normal prose-code:bg-zinc-200 prose-code:dark:bg-zinc-800 prose-code:text-zinc-800 prose-code:dark:text-zinc-200 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-medium prose-code:before:content-none prose-code:after:content-none max-w-none pt-16 pb-6 font-(family-name:--font-noto-sans)"
+    class="site-shell prose prose-lg prose-zinc dark:prose-invert prose-a:no-underline prose-a:hover:underline prose-a:font-normal prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-medium prose-code:before:content-none prose-code:after:content-none max-w-none"
   >
-    <header class="mx-auto mb-12 max-w-[50rem] px-6 text-center">
-      <h1 class="text-5xl font-medium">{title}</h1>
+    <header class="hero mx-auto mb-14 max-w-[74rem] px-6 text-center">
+      <p class="hero-eyebrow">Real2Sim2Real Tactile Policy Learning</p>
+      <h1 class="project-title">
+        <span>{titleLead}</span>
+        {titleTail && <span>via {titleTail}</span>}
+      </h1>
+      <p class="hero-subtitle">
+        A tactile-only dexterous grasping policy for a sensorized LEAP Hand:
+        calibrated contact simulation, geometry-aware tactile representation,
+        and diffusion-based policy distillation.
+      </p>
+      <div class="hero-stats not-prose" aria-label="Project highlights">
+        <div><strong>44</strong><span>tactile channels</span></div>
+        <div><strong>20</strong><span>real objects</span></div>
+        <div><strong>0</strong><span>visual input</span></div>
+      </div>
       <div class="flex flex-col items-center gap-6">
-        <Authors authors={authors} />
-        {conference && <div>{conference}</div>}
+        {(authors?.length ?? 0) > 0 && <Authors authors={authors} />}
+        {conference && <div class="conference-pill">{conference}</div>}
         {notes && <Notes notes={notes} />}
         {links && <Links links={links} />}
       </div>

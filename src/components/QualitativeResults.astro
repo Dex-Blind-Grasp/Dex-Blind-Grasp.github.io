@@ -1,0 +1,102 @@
+---
+import Video from "./Video.astro";
+import crossFail from "../assets/ExpVideo/Seen/Cross_fai.mp4";
+import crossSucc from "../assets/ExpVideo/Seen/Cross_sec.mp4";
+import cubeballFail from "../assets/ExpVideo/Seen/Cubeball_fai.mp4";
+import cubeballSucc from "../assets/ExpVideo/Seen/Cubeball_sec.mp4";
+import hFail from "../assets/ExpVideo/Seen/H_fai.mp4";
+import hSucc from "../assets/ExpVideo/Seen/H_sec.mp4";
+import forkFail from "../assets/ExpVideo/Unseen/fork_fail.mp4";
+import forkSucc from "../assets/ExpVideo/Unseen/fork_sec.mp4";
+import hourFail from "../assets/ExpVideo/Unseen/Hour_fai.mp4";
+import hourSucc from "../assets/ExpVideo/Unseen/Hour_sec.mp4";
+import snowFail from "../assets/ExpVideo/Unseen/Snow_fail.mp4";
+import snowSucc from "../assets/ExpVideo/Unseen/Snow_sec.mp4";
+
+const pairs = [
+  {
+    name: "Cross",
+    split: "Seen",
+    success: crossSucc,
+    failure: crossFail,
+  },
+  {
+    name: "CubeBall",
+    split: "Seen",
+    success: cubeballSucc,
+    failure: cubeballFail,
+  },
+  {
+    name: "H-Shape",
+    split: "Seen",
+    success: hSucc,
+    failure: hFail,
+  },
+  {
+    name: "Fork",
+    split: "Unseen",
+    success: forkSucc,
+    failure: forkFail,
+  },
+  {
+    name: "Hourglass",
+    split: "Unseen",
+    success: hourSucc,
+    failure: hourFail,
+  },
+  {
+    name: "Snowman",
+    split: "Unseen",
+    success: snowSucc,
+    failure: snowFail,
+  },
+];
+---
+
+<section
+  class="qualitative-gallery not-prose"
+  aria-labelledby="qualitative-results-heading"
+>
+  <div class="qualitative-heading">
+    <p class="section-kicker">Qualitative Results</p>
+    <h2 id="qualitative-results-heading">Policy rollouts</h2>
+    <p>
+      Each card shows full-width trial clips for the same object, preserving the
+      native wide aspect ratio of the qualitative videos.
+    </p>
+  </div>
+
+  <div class="qualitative-grid">
+    {
+      pairs.map((pair) => (
+        <article class="qualitative-card">
+          <div class="qualitative-card-header">
+            <h3>{pair.name}</h3>
+            <span>{pair.split}</span>
+          </div>
+
+          <div class="qualitative-video-stack">
+            <figure class="qualitative-clip">
+              <figcaption>w/ Pretrain</figcaption>
+              <Video
+                class="qualitative-video"
+                src={pair.success}
+                autoplay={false}
+                aria-label={`${pair.name} qualitative rollout with pretraining`}
+              />
+            </figure>
+            <figure class="qualitative-clip">
+              <figcaption>w/o Pretrain</figcaption>
+              <Video
+                class="qualitative-video"
+                src={pair.failure}
+                autoplay={false}
+                aria-label={`${pair.name} qualitative rollout without pretraining`}
+              />
+            </figure>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>

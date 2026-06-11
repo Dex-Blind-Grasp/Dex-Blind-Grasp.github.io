@@ -1,4 +1,4 @@
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 import mdx from "@astrojs/mdx";
@@ -7,12 +7,13 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import rehypeCitation from "rehype-citation";
 
-import react from "@astrojs/react";
-
 import astroExpressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
+  devToolbar: {
+    enabled: false,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
@@ -45,15 +46,6 @@ export default defineConfig({
         theme.type === "dark" ? `[data-theme="dark"]` : `[data-theme="light"]`,
     }),
     mdx(),
-    react(),
-  ],
-  fonts: [
-    {
-      provider: fontProviders.google(),
-      name: "Noto Sans",
-      cssVariable: "--font-noto-sans",
-      weights: ["100 900"],
-    },
   ],
   image: {
     responsiveStyles: true,

@@ -1,0 +1,180 @@
+---
+type ResultRow = {
+  object: string;
+  baseline: number;
+  pretrain: number;
+  improvement: number;
+};
+
+type ResultGroup = {
+  label: string;
+  descriptor: string;
+  average: ResultRow;
+  rows: ResultRow[];
+};
+
+const seenRows: ResultRow[] = [
+  { object: "Cube", baseline: 60, pretrain: 62, improvement: 2 },
+  { object: "Ball", baseline: 8, pretrain: 56, improvement: 48 },
+  { object: "Box", baseline: 30, pretrain: 48, improvement: 18 },
+  { object: "Cross", baseline: 52, pretrain: 66, improvement: 14 },
+  { object: "CubeBall", baseline: 38, pretrain: 100, improvement: 62 },
+  { object: "Egg", baseline: 16, pretrain: 24, improvement: 8 },
+  { object: "Big Egg", baseline: 0, pretrain: 8, improvement: 8 },
+  { object: "H-shape", baseline: 44, pretrain: 76, improvement: 32 },
+  { object: "Hollow Cube", baseline: 70, pretrain: 98, improvement: 28 },
+  { object: "Hourglass", baseline: 44, pretrain: 66, improvement: 22 },
+];
+
+const unseenRows: ResultRow[] = [
+  { object: "Hash-Shape", baseline: 22, pretrain: 42, improvement: 20 },
+  { object: "C-Shape", baseline: 18, pretrain: 34, improvement: 16 },
+  { object: "E-Shape", baseline: 18, pretrain: 38, improvement: 20 },
+  { object: "T-Shape", baseline: 28, pretrain: 56, improvement: 28 },
+  { object: "Cylinder", baseline: 2, pretrain: 14, improvement: 12 },
+  { object: "Fork", baseline: 20, pretrain: 62, improvement: 42 },
+  { object: "Ring", baseline: 50, pretrain: 80, improvement: 30 },
+  { object: "Snowman", baseline: 22, pretrain: 48, improvement: 26 },
+  { object: "Tetrahedral", baseline: 8, pretrain: 28, improvement: 20 },
+  { object: "Triple", baseline: 12, pretrain: 30, improvement: 18 },
+];
+
+const groups: ResultGroup[] = [
+  {
+    label: "Seen Objects",
+    descriptor: "10 trained object instances",
+    average: {
+      object: "Seen Avg.",
+      baseline: 36.2,
+      pretrain: 60.4,
+      improvement: 24.2,
+    },
+    rows: seenRows,
+  },
+  {
+    label: "Unseen Objects",
+    descriptor: "10 held-out object instances",
+    average: {
+      object: "Unseen Avg.",
+      baseline: 20.0,
+      pretrain: 43.2,
+      improvement: 23.2,
+    },
+    rows: unseenRows,
+  },
+];
+
+const formatPercent = (value: number, forceDecimal = false) =>
+  `${value.toFixed(forceDecimal ? 1 : value % 1 === 0 ? 0 : 1)}%`;
+---
+
+<section
+  class="results-panel full-bleed not-prose"
+  aria-labelledby="experiment-results-heading"
+>
+  <div class="results-inner">
+    <div class="results-header">
+      <p class="section-kicker">Experiment Results</p>
+      <h2 id="experiment-results-heading">Per-object grasp success rates</h2>
+      <p>
+        Success rates for all 20 objects across 5 trials each, comparing policies with and without privileged tactile pretraining.
+      </p>
+    </div>
+
+    <div class="result-metrics" aria-label="Average result summary">
+      <div>
+        <span>Seen avg. w/ pretrain</span>
+        <strong>60.4%</strong>
+      </div>
+      <div>
+        <span>Unseen avg. w/ pretrain</span>
+        <strong>43.2%</strong>
+      </div>
+      <div>
+        <span>Average improvement</span>
+        <strong>+23.7%</strong>
+      </div>
+    </div>
+
+    <div class="results-grid">
+      {
+        groups.map((group) => (
+          <article class="result-card">
+            <div class="result-card-header">
+              <div>
+                <h3>{group.label}</h3>
+                <p>{group.descriptor}</p>
+              </div>
+              <span class="result-badge">
+                {formatPercent(group.average.pretrain, true)}
+              </span>
+            </div>
+
+            <div class="result-table-wrap">
+              <table class="result-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Object</th>
+                    <th scope="col">w/o Pretrain</th>
+                    <th scope="col">w/ Pretrain</th>
+                    <th scope="col">Improve.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {group.rows.map((row) => (
+                    <tr>
+                      <th scope="row">{row.object}</th>
+                      <td>
+                        <span
+                          class="rate-chip rate-chip-muted"
+                          style={`--rate: ${row.baseline}`}
+                        >
+                          {formatPercent(row.baseline)}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          class="rate-chip rate-chip-strong"
+                          style={`--rate: ${row.pretrain}`}
+                        >
+                          {formatPercent(row.pretrain)}
+                        </span>
+                      </td>
+                      <td class="improvement">
+                        +{formatPercent(row.improvement)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th scope="row">{group.average.object}</th>
+                    <td>
+                      <span
+                        class="rate-chip rate-chip-muted"
+                        style={`--rate: ${group.average.baseline}`}
+                      >
+                        {formatPercent(group.average.baseline, true)}
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        class="rate-chip rate-chip-strong"
+                        style={`--rate: ${group.average.pretrain}`}
+                      >
+                        {formatPercent(group.average.pretrain, true)}
+                      </span>
+                    </td>
+                    <td class="improvement">
+                      +{formatPercent(group.average.improvement, true)}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

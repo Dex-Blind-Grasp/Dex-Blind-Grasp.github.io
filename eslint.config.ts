@@ -1,7 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
 import typescript from "typescript-eslint";
-import react from "@eslint-react/eslint-plugin";
 import astro from "eslint-plugin-astro";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
@@ -33,18 +32,6 @@ export default defineConfig([
     extends: [json.configs.recommended],
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
-    extends: [react.configs["recommended-typescript"]],
-    languageOptions: {
-      parser: typescript.parser,
-      parserOptions: {
-        // Enable project service for better TypeScript integration
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-  {
     files: ["**/*.md"],
     plugins: { markdown },
     language: "markdown/gfm",
@@ -59,6 +46,8 @@ export default defineConfig([
     rules: {
       // Disable rules that don't work well with Tailwind v4 syntax
       "css/no-invalid-at-rules": "off",
+      "css/no-invalid-at-rule-placement": "off",
+      "css/use-baseline": "off",
     },
   },
 ]);

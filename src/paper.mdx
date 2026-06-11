@@ -6,42 +6,29 @@ links:
     url: "#"
     icon: ri:file-pdf-2-line
   - name: Supplementary Video
-    url: "#"
+    url: "#supplementary-video"
     icon: ri:video-line
   - name: Code
     url: "#"
     icon: ri:github-line
   - name: Hardware
-    url: "#"
+    url: "#hardware"
     icon: ri:cpu-line
 theme: device
 favicon: favicon.svg
 description: Blind Dexterous Grasping via Real2Sim2Real Tactile Policy Learning
-thumbnail: screenshot-light.png
+thumbnail: thumbnail.png
 ---
 
 import { Icon } from "astro-icon/components";
 import Figure from "./components/Figure.astro";
 import Picture from "./components/Picture.astro";
 import Video from "./components/Video.astro";
-import TwoColumns from "./components/TwoColumns.astro";
 import HighlightedSection from "./components/HighlightedSection.astro";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/starwind/tabs";
+import ExperimentResults from "./components/ExperimentResults.astro";
+import QualitativeResults from "./components/QualitativeResults.astro";
 import allVideo from "./assets/AllVideo.mp4";
-import crossFail from "./assets/ExpVideo/Seen/Cross_fai.mp4";
-import crossSucc from "./assets/ExpVideo/Seen/Cross_sec.mp4";
-import cubeballFail from "./assets/ExpVideo/Seen/Cubeball_fai.mp4";
-import cubeballSucc from "./assets/ExpVideo/Seen/Cubeball_sec.mp4";
-import hFail from "./assets/ExpVideo/Seen/H_fai.mp4";
-import hSucc from "./assets/ExpVideo/Seen/H_sec.mp4";
-import forkFail from "./assets/ExpVideo/Unseen/fork_fail.mp4";
-import forkSucc from "./assets/ExpVideo/Unseen/fork_sec.mp4";
-import hourFail from "./assets/ExpVideo/Unseen/Hour_fai.mp4";
-import hourSucc from "./assets/ExpVideo/Unseen/Hour_sec.mp4";
-import snowFail from "./assets/ExpVideo/Unseen/Snow_fail.mp4";
-import snowSucc from "./assets/ExpVideo/Unseen/Snow_sec.mp4";
 import hardwareSet from "./assets/HardwareSet.png";
-import expTab from "./assets/ExpTab.png";
 
 <Figure>
   <Picture slot="figure" src="../assets/teaser.pdf" alt="Zero-shot sim-to-real transfer of a tactile-conditioned control policy for reactive blind grasping" />
@@ -64,26 +51,36 @@ We evaluate our method on a physical LEAP Hand equipped with distributed tactile
 
 ## Key Ideas
 
-<div class="space-y-4 my-6">
+<div class="idea-grid not-prose">
 
-<div class="flex items-start gap-3">
-  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:equalizer-line" size={22} /></span>
-  <div><strong>Real2Sim tactile calibration</strong> aligns binary contact-event timing between simulation and hardware using lightweight task-agnostic controlled-contact motions, without requiring complex soft-body modeling or real-world grasping demonstrations.</div>
+<article class="idea-card">
+  <span class="idea-icon"><Icon name="ri:equalizer-line" size={24} /></span>
+  <h3>Real2Sim tactile calibration</h3>
+  <p>Aligns binary contact-event timing between simulation and hardware using lightweight task-agnostic controlled-contact motions, without requiring complex soft-body modeling or real-world grasping demonstrations.</p>
+</article>
+
+<article class="idea-card">
+  <span class="idea-icon"><Icon name="ri:compasses-2-line" size={24} /></span>
+  <h3>Layout-aware tactile encoder</h3>
+  <p>Grounds each sensor in 3D via hand kinematics and is pretrained with privileged geometric supervision (object pose, contact labels), injecting spatial priors into sparse binary tactile observations.</p>
+</article>
+
+<article class="idea-card">
+  <span class="idea-icon"><Icon name="ri:git-branch-line" size={24} /></span>
+  <h3>Expert-to-diffusion distillation</h3>
+  <p>Decouples exploration from deployment: object-specific RL experts generate diverse contact-rich trajectories in simulation, which are aggregated to train a single tactile-conditioned Diffusion Policy capable of multimodal grasp generation under partial observability.</p>
+</article>
+
 </div>
 
-<div class="flex items-start gap-3">
-  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:compasses-2-line" size={22} /></span>
-  <div><strong>Layout-aware tactile encoder</strong> grounds each sensor in 3D via hand kinematics and is pretrained with privileged geometric supervision (object pose, contact labels), injecting spatial priors into sparse binary tactile observations.</div>
-</div>
-
-<div class="flex items-start gap-3">
-  <span class="mt-0.5 shrink-0 text-blue-500 dark:text-blue-300"><Icon name="ri:git-branch-line" size={22} /></span>
-  <div><strong>Expert-to-diffusion policy distillation</strong> decouples exploration from deployment: object-specific RL experts generate diverse contact-rich trajectories in simulation, which are aggregated to train a single tactile-conditioned Diffusion Policy capable of multimodal grasp generation under partial observability.</div>
-</div>
-
-</div>
-
-<Video src={allVideo} />
+<section id="supplementary-video" class="demo-reel not-prose" aria-labelledby="demo-reel-heading">
+  <div class="demo-reel-copy">
+    <p class="section-kicker">Supplementary Video</p>
+    <h2 id="demo-reel-heading">Blind grasping in motion</h2>
+    <p>A compact reel of physical trials shows the policy searching for contact, adjusting finger placement, and lifting objects without visual input.</p>
+  </div>
+  <Video class="demo-reel-video" src={allVideo} aria-label="Supplementary video showing blind dexterous grasping experiments" />
+</section>
 
 ## Policy Architecture
 
@@ -130,103 +127,9 @@ We evaluate on 20 diverse objects (10 seen, 10 unseen) with the policy deployed 
   </Fragment>
 </Figure>
 
-<Figure>
-  <Picture slot="figure" src={expTab} alt="Grasp success rates across 20 seen and unseen objects" />
-  <Fragment slot="caption">
-    **Per-object grasp success rates.** Success rates for all 20 objects across 5 trials each, comparing seen (left) and unseen (right) object sets.
-  </Fragment>
-</Figure>
+<ExperimentResults />
 
-### Qualitative Results
-
-<Tabs defaultValue="cross">
-  <TabsList>
-    <TabsTrigger value="cross">Cross</TabsTrigger>
-    <TabsTrigger value="cubeball">CubeBall</TabsTrigger>
-    <TabsTrigger value="h">H-Shape</TabsTrigger>
-    <TabsTrigger value="fork">Fork</TabsTrigger>
-    <TabsTrigger value="hour">Hourglass</TabsTrigger>
-    <TabsTrigger value="snow">Snowman</TabsTrigger>
-  </TabsList>
-
-  <TabsContent value="cross">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={crossSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={crossFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-
-  <TabsContent value="cubeball">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={cubeballSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={cubeballFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-
-  <TabsContent value="h">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={hSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={hFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-
-  <TabsContent value="fork">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={forkSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={forkFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-
-  <TabsContent value="hour">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={hourSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={hourFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-
-  <TabsContent value="snow">
-    <TwoColumns>
-      <Figure slot="left">
-        <Video slot="figure" src={snowSucc} />
-        <Fragment slot="caption">w/ Pretrain</Fragment>
-      </Figure>
-      <Figure slot="right">
-        <Video slot="figure" src={snowFail} />
-        <Fragment slot="caption">w/o Pretrain</Fragment>
-      </Figure>
-    </TwoColumns>
-  </TabsContent>
-</Tabs>
+<QualitativeResults />
 
 ## Limitations
 
