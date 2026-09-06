@@ -5,6 +5,11 @@ export type Author = {
   notes?: string[];
 };
 
+export type Affiliation = {
+  id: string;
+  name: string;
+};
+
 export type Link = {
   url: string;
   name: string;

@@ -1,30 +1,48 @@
 ---
-import type { Author } from "../types/types";
+import type { Author, Affiliation } from "../types/types";
 
 interface Props {
   authors: Author[];
+  affiliations?: Affiliation[];
 }
 
-const { authors } = Astro.props;
+const { authors, affiliations } = Astro.props;
 ---
 
-<div class="links flex flex-row flex-wrap justify-center gap-x-8 gap-y-4">
-  {
-    authors.map((author) => (
-      <div class="flex flex-col items-center text-center">
-        <div class="flex flex-row text-xl">
-          {author.url ? <a href={author.url}>{author.name}</a> : author.name}
-          {author.notes && (
-            <sup class="text-xl">
-              {author.notes.map(
-                (note, index, array) =>
-                  note + (index < array.length - 1 ? "," : ""),
-              )}
-            </sup>
-          )}
+<div class="not-prose flex max-w-full flex-col items-center gap-3">
+  <div class="links flex flex-row flex-wrap justify-center gap-x-8 gap-y-4">
+    {
+      authors.map((author) => (
+        <div class="flex flex-col items-center text-center">
+          <div class="text-xl">
+            {author.url ? <a href={author.url}>{author.name}</a> : author.name}
+            {author.notes && (
+              <sup class="ml-0.5 text-xs font-semibold">
+                {author.notes.map(
+                  (note, index, array) =>
+                    note + (index < array.length - 1 ? "," : ""),
+                )}
+              </sup>
+            )}
+          </div>
+          {author.institution && <div>{author.institution}</div>}
         </div>
-        {author.institution && <div>{author.institution}</div>}
+      ))
+    }
+  </div>
+  {
+    affiliations && (
+      <div
+        class="flex max-w-full flex-wrap justify-center gap-x-6 gap-y-1 text-center text-base leading-relaxed text-[var(--ink-soft)]"
+        aria-label="Author affiliations"
+      >
+        {affiliations.map((affiliation) => (
+          <span>
+            <sup class="mr-1 text-xs">{affiliation.id}</sup>
+            {affiliation.name}
+          </span>
+        ))}
       </div>
-    ))
+    )
   }
 </div>
