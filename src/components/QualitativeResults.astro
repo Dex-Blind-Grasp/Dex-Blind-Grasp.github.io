@@ -1,55 +1,73 @@
 ---
 import Video from "./Video.astro";
+
+// ── Seen objects ──
+import cubeFail from "../assets/ExpVideo/Seen/Cube_fai.mp4";
+import cubeSucc from "../assets/ExpVideo/Seen/Cube_sec.mp4";
+import ballFail from "../assets/ExpVideo/Seen/Ball_fai.mp4";
+import ballSucc from "../assets/ExpVideo/Seen/Ball_sec.mp4";
+import boxFail from "../assets/ExpVideo/Seen/Box_fai.mp4";
+import boxSucc from "../assets/ExpVideo/Seen/Box_sec.mp4";
 import crossFail from "../assets/ExpVideo/Seen/Cross_fai.mp4";
 import crossSucc from "../assets/ExpVideo/Seen/Cross_sec.mp4";
-import cubeballFail from "../assets/ExpVideo/Seen/Cubeball_fai.mp4";
-import cubeballSucc from "../assets/ExpVideo/Seen/Cubeball_sec.mp4";
+import cubeballFail from "../assets/ExpVideo/Seen/CubeBall_fai.mp4";
+import cubeballSucc from "../assets/ExpVideo/Seen/CubeBall_sec.mp4";
+import eggFail from "../assets/ExpVideo/Seen/Egg_fai.mp4";
+import eggSucc from "../assets/ExpVideo/Seen/Egg_sec.mp4";
+import bigeggFail from "../assets/ExpVideo/Seen/BigEgg_fai.mp4";
+import bigeggSucc from "../assets/ExpVideo/Seen/BigEgg_sec.mp4";
 import hFail from "../assets/ExpVideo/Seen/H_fai.mp4";
 import hSucc from "../assets/ExpVideo/Seen/H_sec.mp4";
-import forkFail from "../assets/ExpVideo/Unseen/fork_fail.mp4";
-import forkSucc from "../assets/ExpVideo/Unseen/fork_sec.mp4";
-import hourFail from "../assets/ExpVideo/Unseen/Hour_fai.mp4";
-import hourSucc from "../assets/ExpVideo/Unseen/Hour_sec.mp4";
+import hollowcubeFail from "../assets/ExpVideo/Seen/HollowCube_fai.mp4";
+import hollowcubeSucc from "../assets/ExpVideo/Seen/HollowCube_sec.mp4";
+import hourglassFail from "../assets/ExpVideo/Seen/Hourglass_fai.mp4";
+import hourglassSucc from "../assets/ExpVideo/Seen/Hourglass_sec.mp4";
+
+// ── Unseen objects ──
+import hashFail from "../assets/ExpVideo/Unseen/Hash_fai.mp4";
+import hashSucc from "../assets/ExpVideo/Unseen/Hash_sec.mp4";
+import cFail from "../assets/ExpVideo/Unseen/C_fai.mp4";
+import cSucc from "../assets/ExpVideo/Unseen/C_sec.mp4";
+import eFail from "../assets/ExpVideo/Unseen/E_fai.mp4";
+import eSucc from "../assets/ExpVideo/Unseen/E_sec.mp4";
+import tFail from "../assets/ExpVideo/Unseen/T_fai.mp4";
+import tSucc from "../assets/ExpVideo/Unseen/T_sec.mp4";
+import cylinderFail from "../assets/ExpVideo/Unseen/Cylinder_fai.mp4";
+import cylinderSucc from "../assets/ExpVideo/Unseen/Cylinder_sec.mp4";
+import forkFail from "../assets/ExpVideo/Unseen/Fork_fai.mp4";
+import forkSucc from "../assets/ExpVideo/Unseen/Fork_sec.mp4";
+import ringFail from "../assets/ExpVideo/Unseen/Ring_fai.mp4";
+import ringSucc from "../assets/ExpVideo/Unseen/Ring_sec.mp4";
 import snowFail from "../assets/ExpVideo/Unseen/Snow_fail.mp4";
 import snowSucc from "../assets/ExpVideo/Unseen/Snow_sec.mp4";
+import tetrahedralFail from "../assets/ExpVideo/Unseen/Tetrahedral_fai.mp4";
+import tetrahedralSucc from "../assets/ExpVideo/Unseen/Tetrahedral_sec.mp4";
+import tripleFail from "../assets/ExpVideo/Unseen/Triple_fai.mp4";
+import tripleSucc from "../assets/ExpVideo/Unseen/Triple_sec.mp4";
 
 const pairs = [
-  {
-    name: "Cross",
-    split: "Seen",
-    success: crossSucc,
-    failure: crossFail,
-  },
-  {
-    name: "CubeBall",
-    split: "Seen",
-    success: cubeballSucc,
-    failure: cubeballFail,
-  },
-  {
-    name: "H-Shape",
-    split: "Seen",
-    success: hSucc,
-    failure: hFail,
-  },
-  {
-    name: "Fork",
-    split: "Unseen",
-    success: forkSucc,
-    failure: forkFail,
-  },
-  {
-    name: "Hourglass",
-    split: "Unseen",
-    success: hourSucc,
-    failure: hourFail,
-  },
-  {
-    name: "Snowman",
-    split: "Unseen",
-    success: snowSucc,
-    failure: snowFail,
-  },
+  // ── Seen (10 objects) ──
+  { name: "Cube",        split: "Seen",   success: cubeSucc,        failure: cubeFail },
+  { name: "Ball",        split: "Seen",   success: ballSucc,        failure: ballFail },
+  { name: "Box",         split: "Seen",   success: boxSucc,         failure: boxFail },
+  { name: "Cross",       split: "Seen",   success: crossSucc,       failure: crossFail },
+  { name: "CubeBall",    split: "Seen",   success: cubeballSucc,    failure: cubeballFail },
+  { name: "Egg",         split: "Seen",   success: eggSucc,         failure: eggFail },
+  { name: "Big Egg",     split: "Seen",   success: bigeggSucc,      failure: bigeggFail },
+  { name: "H-Shape",     split: "Seen",   success: hSucc,           failure: hFail },
+  { name: "HollowCube",  split: "Seen",   success: hollowcubeSucc,  failure: hollowcubeFail },
+  { name: "Hourglass",   split: "Seen",   success: hourglassSucc,   failure: hourglassFail },
+  // ── Unseen (10 objects) ──
+  { name: "Hash",         split: "Unseen", success: hashSucc,         failure: hashFail },
+  { name: "C-Shape",      split: "Unseen", success: cSucc,            failure: cFail },
+  { name: "E-Shape",      split: "Unseen", success: eSucc,            failure: eFail },
+  { name: "T-Shape",      split: "Unseen", success: tSucc,            failure: tFail },
+  { name: "Cylinder",     split: "Unseen", success: cylinderSucc,     failure: cylinderFail },
+  { name: "Fork",         split: "Unseen", success: forkSucc,         failure: forkFail },
+  { name: "Ring",         split: "Unseen", success: ringSucc,         failure: ringFail },
+  { name: "Snowman",      split: "Unseen", success: snowSucc,         failure: snowFail },
+  { name: "Tetrahedral",  split: "Unseen", success: tetrahedralSucc,  failure: tetrahedralFail },
+  { name: "Triple",       split: "Unseen", success: tripleSucc,       failure: tripleFail },
 ];
 ---
 
